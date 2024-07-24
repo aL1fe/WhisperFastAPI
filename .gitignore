@@ -2,3 +2,4 @@ venvMS/
 __pycache__/
 
 .env
+ffmpeg.exe
