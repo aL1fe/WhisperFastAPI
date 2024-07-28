@@ -1,5 +1,7 @@
-venvMS/
+venvMeetSum/
 __pycache__/
+mp3
 
 .env
 ffmpeg.exe
+*.mp3
