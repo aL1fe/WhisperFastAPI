@@ -1,3 +1,2 @@
-python-multipart
 fastapi
 uvicorn
