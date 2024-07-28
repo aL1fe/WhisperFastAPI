@@ -32,7 +32,7 @@ pipe = pipeline(
     return_timestamps=True,
     torch_dtype=torch_dtype,
     device=device,
-    generate_kwargs={"language": "en"}
+    generate_kwargs={"language": "en", "suppress_tokens": []}  
 )
 
 app = FastAPI()    
