@@ -39,20 +39,24 @@ pipe = pipeline(
 app = FastAPI()
 
 
+async def save_file(file: UploadFile, upload_folder: str = "uploads") -> str:
+    # Create folder if it does not exist
+    os.makedirs(upload_folder, exist_ok=True)
+
+    # Form the full path for the file
+    file_path = os.path.join(upload_folder, file.filename)
+
+    # Save file to upload_folder
+    with open(file_path, "wb") as f:
+        f.write(await file.read())
+
+    return file_path
+
+
 @app.post("/upload/")
 async def upload_file(file: UploadFile):
     try:
-        # Folder with processing file
-        upload_folder = "uploads"
-
-        # Create folder if not exist
-        os.makedirs(upload_folder, exist_ok=True)
-
-        file_path = os.path.join(upload_folder, file.filename)
-
-        # Save file to upload_folder
-        with open(file_path, "wb") as f:
-            f.write(await file.read())
+        file_path = await save_file(file)
 
         start_time = time.time()
 
