@@ -8,7 +8,7 @@ How to first run on the local PS.
 	INFO:     Started server process [19792]
 	INFO:     Waiting for application startup
 	INFO:     Application startup complete
-	INFO:     Uvicorn running on http://127.0.0.1:8005 (Press CTRL+C to quit)
+	INFO:     Uvicorn running on http://0.0.0.0:8005 (Press CTRL+C to quit)
 5.	Open brouser: http://127.0.0.1:8005/docs
 	You will see Swagger.
 
@@ -19,6 +19,6 @@ The second and subsequent runs on the local PS.
 	INFO:     Started server process [19792]
 	INFO:     Waiting for application startup
 	INFO:     Application startup complete
-	INFO:     Uvicorn running on http://127.0.0.1:8005 (Press CTRL+C to quit)
+	INFO:     Uvicorn running on http://0.0.0.0:8005 (Press CTRL+C to quit)
 3.	Open brouser: http://127.0.0.1:8005/docs
 	You will see swagger.
