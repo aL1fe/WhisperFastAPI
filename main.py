@@ -41,30 +41,33 @@ app = FastAPI()
 
 @app.post("/upload/")
 async def upload_file(file: UploadFile):
-    # Folder with processing file
-    upload_folder = "uploads"
+    try:
+        # Folder with processing file
+        upload_folder = "uploads"
 
-    # Create folder if not exist
-    os.makedirs(upload_folder, exist_ok=True)
+        # Create folder if not exist
+        os.makedirs(upload_folder, exist_ok=True)
 
-    file_path = os.path.join(upload_folder, file.filename)
+        file_path = os.path.join(upload_folder, file.filename)
 
-    # Save file to upload_folder
-    with open(file_path, "wb") as f:
-        f.write(await file.read())
+        # Save file to upload_folder
+        with open(file_path, "wb") as f:
+            f.write(await file.read())
 
-    start_time = time.time()
+        start_time = time.time()
 
-    # Transcribe file
-    result = pipe(file_path)
+        # Transcribe file
+        result = pipe(file_path)
 
-    execution_time = round((time.time() - start_time), 2)
+        execution_time = round((time.time() - start_time), 2)
 
-    # Delete file after processing
-    os.remove(file_path)
+        # Delete file after processing
+        os.remove(file_path)
 
-    # return {file_path}
-    return {"TranscribedRecord": result["text"], "executionTime": f"{execution_time} sec"}
+        # return {file_path}
+        return {"TranscribedRecord": result["text"], "executionTime": f"{execution_time} sec"}
+    except Exception as e:
+        return {f"Error: {e}"}
 
 
 # If the script is executed as the main module, start the ASGI-server on the 8005 port
