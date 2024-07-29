@@ -1,6 +1,7 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile
 import torch
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
+import time
 import os
 
 if torch.cuda.is_available():
@@ -27,9 +28,9 @@ pipe = pipeline(
     tokenizer=processor.tokenizer,
     feature_extractor=processor.feature_extractor,
     max_new_tokens=128,
-    chunk_length_s=30,
+    chunk_length_s=25,
     batch_size=16,
-    return_timestamps=True,
+    # return_timestamps=True,
     torch_dtype=torch_dtype,
     device=device,
     generate_kwargs={"language": "en", "suppress_tokens": []}  
@@ -41,11 +42,19 @@ app = FastAPI()
 async def upload_file(file: UploadFile):
     with open(file.filename, "wb") as f:
         f.write(await file.read())
-    result = pipe(file.filename)
-    # os.remove(file.filename) 
+        
+    startTime = time.time()
 
-    return {"TranscribedRecord": result["text"]}
+    result = pipe(file.filename)
     
+    executionTime = round((time.time() - startTime), 2)
+    
+    os.remove(file.filename)    #Delete file after processing
+
+    return {"TranscribedRecord": result["text"], "executionTime": f"{executionTime} sec"}
+
+    
+# If the script is executed as the main module, start the ASGI-server on the 8005 port
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8005)
