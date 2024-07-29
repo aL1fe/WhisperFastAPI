@@ -1,6 +1,7 @@
 venvMeetSum/
 __pycache__/
 mp3
+.idea
 
 .env
 ffmpeg.exe
