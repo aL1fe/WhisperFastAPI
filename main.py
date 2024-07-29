@@ -33,27 +33,40 @@ pipe = pipeline(
     # return_timestamps=True,
     torch_dtype=torch_dtype,
     device=device,
-    generate_kwargs={"language": "en", "suppress_tokens": []}  
+    generate_kwargs={"language": "en", "suppress_tokens": []}
 )
 
-app = FastAPI()    
+app = FastAPI()
+
 
 @app.post("/upload/")
 async def upload_file(file: UploadFile):
-    with open(file.filename, "wb") as f:
+    # Folder with processing file
+    upload_folder = "uploads"
+
+    # Create folder if not exist
+    os.makedirs(upload_folder, exist_ok=True)
+
+    file_path = os.path.join(upload_folder, file.filename)
+
+    # Save file to upload_folder
+    with open(file_path, "wb") as f:
         f.write(await file.read())
-        
-    startTime = time.time()
 
-    result = pipe(file.filename)
-    
-    executionTime = round((time.time() - startTime), 2)
-    
-    os.remove(file.filename)    #Delete file after processing
+    start_time = time.time()
 
-    return {"TranscribedRecord": result["text"], "executionTime": f"{executionTime} sec"}
+    # Transcribe file
+    result = pipe(file_path)
 
-    
+    execution_time = round((time.time() - start_time), 2)
+
+    # Delete file after processing
+    os.remove(file_path)
+
+    # return {file_path}
+    return {"TranscribedRecord": result["text"], "executionTime": f"{execution_time} sec"}
+
+
 # If the script is executed as the main module, start the ASGI-server on the 8005 port
 if __name__ == "__main__":
     import uvicorn
