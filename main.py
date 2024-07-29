@@ -71,10 +71,11 @@ async def upload_file(file: UploadFile):
         # return {file_path}
         return {"TranscribedRecord": result["text"], "executionTime": f"{execution_time} sec"}
     except Exception as e:
-        return {f"Error: {e}"}
+        return {"Error": str(e)}
 
 
 # If the script is executed as the main module, start the ASGI-server on the 8005 port
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8005)
