@@ -2,8 +2,8 @@ How to first run on the local PS.
 1.	Download ffmpeg.exe and put it in folder with main.py.
 2.	Open Power Shell in folder with main.py.
 3.	Use command to start configuration and set up virtual environment: .\startup.ps1
-	Wait until you will see the next one: (venvMeetSum) PS D:\Alex\Programming\MeetingSummarizer>
-	Folders venvMeetSum and __pycache__ will be genereted.
+	Wait until you will see the next one: (.venv) PS D:\Alex\Programming\MeetingSummarizer>
+	Folders .venv and __pycache__ will be genereted.
 4.	Wait for you will see:
 	INFO:     Started server process [19792]
 	INFO:     Waiting for application startup

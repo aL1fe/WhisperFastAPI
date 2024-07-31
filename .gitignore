@@ -1,8 +1,9 @@
-venvMeetSum/
+.idea/
+.venv/
 __pycache__/
-mp3
-.idea
+mp3/
+uploads/
 
+*.mp3
 .env
 ffmpeg.exe
-*.mp3
