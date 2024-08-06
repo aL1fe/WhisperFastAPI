@@ -1,0 +1,41 @@
+FROM nvidia/cuda:12.5.1-cudnn-devel-ubuntu20.04
+
+# Устанавливаем переменную окружения для предотвращения интерактивного ввода
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Обновляем список пакетов
+RUN apt-get update
+
+# Устанавливаем утилиту для настройки временной зоны
+RUN apt-get install -y tzdata
+
+# Настраиваем временную зону
+RUN ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime \
+    && dpkg-reconfigure --frontend noninteractive tzdata
+
+# Устанавливаем Python 3.12
+RUN apt-get install -y python3.12 \
+    python3-pip \
+    git \
+	ffmpeg
+#    && apt-get clean \
+#    && rm -rf /var/lib/apt/lists/*
+
+# Устанавливаем PyTorch с поддержкой CUDA
+#RUN pip3 install torch==2.0.1+cu118 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu118
+RUN python3.12 -m pip install torch==2.0.1+cu118 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu118
+
+# Устанавливаем необходимые пакеты для модели Whisper
+RUN pip3 install transformers
+
+WORKDIR /app
+
+# Копируем все файлы в рабочую директорию
+COPY . .
+
+# Устанавливаем зависимости из requirements.txt
+RUN python3.12 -m pip install -r requirements.txt
+
+# Запуск вашего приложения
+CMD [ "python3.12", "main.py" ]
+
