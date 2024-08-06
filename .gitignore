@@ -1,4 +1,5 @@
 .idea/
+.install/
 .venv/
 __pycache__/
 mp3/
