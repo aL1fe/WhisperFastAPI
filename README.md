@@ -1,9 +1,9 @@
-Requirements
+Requirements:
 1. Check if Python is Installed
 	1.1. Open PowerShell.
 	1.2. Run the following command:
 		python --version
-2. Check if CUDA is Installed
+2. Check if CUDA toolkit is Installed
 	2.1. Open PowerShell.
 	2.2. Run the following command:
 		nvidia-smi
@@ -12,8 +12,8 @@ Requirements
 How to first run on the local PS.
 1.	Download ffmpeg.exe and put it in folder with main.py.
 2.	Open Power Shell in folder with main.py.
-3.	Use command to start configuration and set up virtual environment: .\startup.ps1
-	Wait until you will see the next one: (.venv) PS D:\Alex\Programming\MeetingSummarizer>
+3.	Run the following command:
+	.\startup.ps1
 	Folders .venv and __pycache__ will be genereted.
 4.	Wait for you will see:
 	INFO:     Started server process [19792]
@@ -25,7 +25,8 @@ How to first run on the local PS.
 
 The second and subsequent runs on the local PS.
 1.	Open Power Shell in folder with main.py.
-2.	Use command to run the application: .\run.ps1
+2.	Run the following command:
+	.\run.ps1
 	Wait for you will see:
 	INFO:     Started server process [19792]
 	INFO:     Waiting for application startup
@@ -46,9 +47,12 @@ How to fix.
 1. Download libomp140.x86_64.dll and put it to C:\Windows\System32
 2. Install VC_redist.x64.exe if needed.
 -------------------------------------------------------------------------------------------
-Useful links.
+Useful links:
 OpenAI/whisper-large-v3 model
 https://huggingface.co/openai/whisper-large-v3
+
+CUDA toolkit
+https://developer.nvidia.com/cuda-toolkit
 
 How to install Pytorch with CUDA Version
 https://www.gpu-mart.com/blog/Installing-pytorch-with-cuda-support-on-Windows
