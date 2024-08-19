@@ -59,3 +59,4 @@ https://www.gpu-mart.com/blog/Installing-pytorch-with-cuda-support-on-Windows
 
 Torch Installation Command Generator
 https://pytorch.org/get-started/locally/
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121

@@ -61,22 +61,21 @@ async def upload_file(file: UploadFile):
 
         start_time = time.time()
 
-        # Transcribe file
-        result = pipe(file_path)
+        result = pipe(file_path) # Transcribe file
 
         execution_time = round((time.time() - start_time), 2)
 
         # Delete file after processing
         os.remove(file_path)
 
-        # return {file_path}
         return {"TranscribedRecord": result["text"], "executionTime": f"{execution_time} sec"}
     except Exception as e:
         return {"Error": str(e)}
 
 
-# If the script is executed as the main module, start the ASGI-server on the 8005 port
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run(app, host="0.0.0.0", port=8005)
+
+# TODO save TranscribedRecord
+# TODO add Rabbit<Q
