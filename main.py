@@ -3,7 +3,15 @@ import torch
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
 import time
 import os
+from dotenv import load_dotenv
 from module_file import save_file
+
+
+env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+load_dotenv(dotenv_path=env_path)
+upload_folder = os.getenv('WHISPER_UPLOAD_FOLDER')
+is_delete_after_processing = (os.getenv('WHISPER_IS_DELETE_AFTER_PROCESSING', 'False')
+                              .lower() in ('true', '1', 'yes'))
 
 if torch.cuda.is_available():
     device = "cuda:0"
@@ -52,8 +60,8 @@ async def upload_file(file: UploadFile):
 
         execution_time = round((time.time() - start_time), 2)
 
-        # Delete file after processing
-        os.remove(file_path)
+        if is_delete_after_processing:
+            os.remove(file_path) # Delete file after processing
 
         return {"TranscribedRecord": result["text"], "executionTime": f"{execution_time} sec"}
     except Exception as e:
