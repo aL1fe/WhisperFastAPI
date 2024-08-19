@@ -1,7 +1,11 @@
 .venv/
 __pycache__/
 .install/
+transcribed_record/
+transcribed_record/
 
 .env
 docker-compose.yml
 ffmpeg.exe
+BuildBaseImage.bat
+BuildImage.bat

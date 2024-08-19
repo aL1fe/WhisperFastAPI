@@ -1,0 +1,31 @@
+FROM nvidia/cuda:12.5.1-cudnn-devel-ubuntu20.04
+
+# Устанавливаем переменную окружения для предотвращения интерактивного ввода
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Обновляем список пакетов
+RUN apt-get update
+
+# Устанавливаем утилиту для настройки временной зоны
+RUN apt-get install -y tzdata
+
+# Настраиваем временную зону
+RUN ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime \
+    && dpkg-reconfigure --frontend noninteractive tzdata
+	
+RUN apt-get update && \
+	apt-get install -y python3 python3-pip && \
+	ln -s /usr/bin/python3 /usr/bin/python && \
+	python -m pip install --upgrade pip && \
+    apt-get update && \
+	pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+	
+RUN apt-get install -y ffmpeg 
+
+# Установка git
+RUN apt-get update && apt-get install -y git
+
+WORKDIR /app
+COPY requirements.txt .
+
+RUN pip install -r requirements.txt
