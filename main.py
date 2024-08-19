@@ -3,6 +3,7 @@ import torch
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
 import time
 import os
+from module_file import save_file
 
 if torch.cuda.is_available():
     device = "cuda:0"
@@ -40,24 +41,10 @@ pipe = pipeline(
 app = FastAPI()
 
 
-async def save_file(file: UploadFile, upload_folder: str = "uploads") -> str:
-    # Create folder if it does not exist
-    os.makedirs(upload_folder, exist_ok=True)
-
-    # Form the full path for the file
-    file_path = os.path.join(upload_folder, file.filename)
-
-    # Save file to upload_folder
-    with open(file_path, "wb") as f:
-        f.write(await file.read())
-
-    return file_path
-
-
 @app.post("/upload/")
 async def upload_file(file: UploadFile):
     try:
-        file_path = await save_file(file)
+        file_path = await save_file(file, upload_folder)
 
         start_time = time.time()
 
