@@ -4,15 +4,15 @@ from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
 import time
 import os
 from dotenv import load_dotenv
-from module_broker import receive_message
 from module_file import save_file
+import asyncio
+from typing import AsyncIterator
 
 
-env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
-load_dotenv(dotenv_path=env_path)
-upload_folder = os.getenv('WHISPER_UPLOAD_FOLDER')
+load_dotenv()
 is_delete_after_processing = (os.getenv('WHISPER_IS_DELETE_AFTER_PROCESSING', 'False')
                               .lower() in ('true', '1', 'yes'))
+upload_folder = 'incoming_files'
 
 if torch.cuda.is_available():
     device = "cuda:0"
@@ -50,20 +50,28 @@ pipe = pipeline(
 app = FastAPI()
 
 
+async def transcribe_file(file):
+    file_path = await save_file(file, upload_folder)
+
+    start_time = time.time()
+
+    result = pipe(file_path)  # Transcribe file
+    print(f"File {file.filename} was transcribed.")
+
+    execution_time = round((time.time() - start_time), 2)
+
+    # TODO save TranscribedRecord output_file_path = os.path.join(output_folder, f"{filename}.mp")
+
+    if is_delete_after_processing:
+        os.remove(file_path)  # Delete file after processing
+
+    return result, execution_time
+
+
 @app.post("/upload/")
 async def upload_file(file: UploadFile):
     try:
-        file_path = await save_file(file, upload_folder)
-
-        start_time = time.time()
-
-        result = pipe(file_path) # Transcribe file
-
-        execution_time = round((time.time() - start_time), 2)
-
-        if is_delete_after_processing:
-            os.remove(file_path) # Delete file after processing
-
+        result, execution_time = await transcribe_file(file)
         return {"TranscribedRecord": result["text"], "executionTime": f"{execution_time} sec"}
     except Exception as e:
         return {"Error": str(e)}
@@ -73,5 +81,4 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8005)
 
-# TODO save TranscribedRecord
 # TODO add Rabbit<Q
